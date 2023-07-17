@@ -22,7 +22,7 @@ func HandleThreadView(w http.ResponseWriter, r *http.Request) {
 	makePresentThreadHtml := func(t models.Thread) string {
 		return fmt.Sprintf(
 			"<div>"+
-				"(%d) %s --- %s<p>%s</p>"+
+				"(%d) %s --- %s<p style='white-space: pre-wrap'>%s</p>"+
 				"<form action='/delete' method='post'>"+
 				"<button name='id' value='%d'>勝手に削除する🤪</button>"+
 				"</form></div>",
