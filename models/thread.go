@@ -1,6 +1,10 @@
 package models
 
-import "time"
+import (
+	"strings"
+	"time"
+	"unicode"
+)
 
 type Thread struct {
 	Id        int
@@ -12,6 +16,11 @@ type Thread struct {
 }
 
 func NewThread(name string, body string, now time.Time) Thread {
+	name = strings.TrimSpace(name)
+	body = strings.TrimRightFunc(body, func(r rune) bool {
+		return unicode.IsSpace(r)
+	})
+
 	if name == "" {
 		name = "匿名さん"
 	}
