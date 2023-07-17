@@ -11,7 +11,7 @@ type Thread struct {
 	IsDeleted bool
 }
 
-func NewThread(name string, body string) Thread {
+func NewThread(name string, body string, now time.Time) Thread {
 	if name == "" {
 		name = "匿名さん"
 	}
@@ -21,6 +21,11 @@ func NewThread(name string, body string) Thread {
 	return Thread{
 		Name:      name,
 		Body:      body,
-		CreatedAt: time.Time{},
+		CreatedAt: now,
 	}
+}
+
+func (t *Thread) Delete(now time.Time) {
+	t.DeletedAt = now
+	t.IsDeleted = true
 }

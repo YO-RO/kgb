@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/YO-RO/kgb/models"
 	"github.com/YO-RO/kgb/stores"
@@ -40,8 +41,8 @@ func HandleThreadView(w http.ResponseWriter, r *http.Request) {
 		)
 	}
 
-	threads := stores.ThreadStore.Read()
 	var threadsHtml string
+	threads := stores.ThreadStore.Read()
 	for _, t := range threads {
 		switch t.IsDeleted {
 		case true:
@@ -58,20 +59,34 @@ func HandleThreadView(w http.ResponseWriter, r *http.Request) {
 
 func HandleThreadPost(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
-	stores.ThreadStore.Post(models.NewThread(r.PostFormValue("name"), r.PostFormValue(("body"))))
+
+	newThread := models.NewThread(
+		r.PostFormValue("name"),
+		r.PostFormValue("body"),
+		time.Now(),
+	)
+	stores.ThreadStore.Create(newThread)
 
 	http.Redirect(w, r, "/", http.StatusMovedPermanently)
 }
 
 func HandleThreadDelete(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
+
 	id, err := strconv.Atoi(r.PostFormValue("id"))
 	if err != nil {
 		log.Println(err)
 		http.Redirect(w, r, "/", http.StatusMovedPermanently)
 	}
 
-	if ok := stores.ThreadStore.Delete(id); !ok {
+	target, err := stores.ThreadStore.FindById(id)
+	if err != nil {
+		log.Println(err)
+		http.Redirect(w, r, "/", http.StatusMovedPermanently)
+	}
+	target.Delete(time.Now())
+
+	if err := stores.ThreadStore.Update(target); err != nil {
 		log.Printf("delete failed - id: %d\n", id)
 		http.Redirect(w, r, "/", http.StatusMovedPermanently)
 	}

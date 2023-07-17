@@ -1,7 +1,7 @@
 package stores
 
 import (
-	"time"
+	"errors"
 
 	"github.com/YO-RO/kgb/models"
 )
@@ -10,29 +10,32 @@ type threadsStore []models.Thread
 
 var ThreadStore threadsStore = make(threadsStore, 0, 30)
 
-func (tp *threadsStore) Post(target models.Thread) {
+func (tp *threadsStore) Create(target models.Thread) {
 	target.Id = len(*tp) + 1
 	*tp = append(*tp, target)
 }
 
 func (threads threadsStore) Read() []models.Thread {
-	for i, t := range threads {
-		if t.IsDeleted {
-			threads[i].Body = "削除されました"
-		}
-	}
-	return threads
+	copied := make(threadsStore, len(threads))
+	copy(copied, threads)
+	return copied
 }
 
-func (t threadsStore) Delete(id int) bool {
+func (threads threadsStore) FindById(id int) (models.Thread, error) {
 	index := id - 1
-	if !(index >= 0 && index < len(t)) {
-		return false
+	if !(index >= 0 && index < len(threads)) {
+		return models.Thread{}, errors.New("id is invalid")
 	}
 
-	target := t[index]
-	target.DeletedAt = time.Now()
-	target.IsDeleted = true
-	t[index] = target
-	return true
+	return threads[index], nil
+}
+
+func (t threadsStore) Update(updatedThread models.Thread) error {
+	index := updatedThread.Id - 1
+	if !(index >= 0 && index < len(t)) {
+		return errors.New("id is invalid")
+	}
+
+	t[index] = updatedThread
+	return nil
 }
