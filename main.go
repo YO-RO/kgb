@@ -12,8 +12,8 @@ const port = ":8888"
 func main() {
 	log.Printf("Start Server - http://localhost%s\n", port)
 
-	http.HandleFunc("/", handlers.HandleThreadView)
-	http.HandleFunc("/post", handlers.HandleThreadPost)
-	http.HandleFunc("/delete", handlers.HandleThreadDelete)
+	http.HandleFunc("/", handlers.ThreadsViewHandler)
+	http.HandleFunc("/post", handlers.PostThreadHandler)
+	http.HandleFunc("/delete", handlers.DeleteThreadHandler)
 	log.Fatal(http.ListenAndServe(port, nil))
 }

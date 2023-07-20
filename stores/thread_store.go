@@ -10,32 +10,32 @@ type threadsStore []models.Thread
 
 var ThreadStore threadsStore = make(threadsStore, 0, 30)
 
-func (tp *threadsStore) Create(target models.Thread) {
-	target.Id = len(*tp) + 1
-	*tp = append(*tp, target)
+func (sp *threadsStore) Create(target models.Thread) {
+	target.Id = len(*sp) + 1
+	*sp = append(*sp, target)
 }
 
-func (threads threadsStore) Read() []models.Thread {
-	copied := make(threadsStore, len(threads))
-	copy(copied, threads)
+func (s threadsStore) Read() []models.Thread {
+	copied := make(threadsStore, len(s))
+	copy(copied, s)
 	return copied
 }
 
-func (threads threadsStore) FindById(id int) (models.Thread, error) {
+func (s threadsStore) FindById(id int) (models.Thread, error) {
 	index := id - 1
-	if !(index >= 0 && index < len(threads)) {
+	if !(index >= 0 && index < len(s)) {
 		return models.Thread{}, errors.New("id is invalid")
 	}
 
-	return threads[index], nil
+	return s[index], nil
 }
 
-func (t threadsStore) Update(updatedThread models.Thread) error {
+func (s threadsStore) Update(updatedThread models.Thread) error {
 	index := updatedThread.Id - 1
-	if !(index >= 0 && index < len(t)) {
+	if !(index >= 0 && index < len(s)) {
 		return errors.New("id is invalid")
 	}
 
-	t[index] = updatedThread
+	s[index] = updatedThread
 	return nil
 }

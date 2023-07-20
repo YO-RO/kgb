@@ -12,7 +12,7 @@ import (
 	"github.com/YO-RO/kgb/stores"
 )
 
-func HandleThreadView(w http.ResponseWriter, r *http.Request) {
+func ThreadsViewHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
 		return
@@ -62,7 +62,7 @@ func HandleThreadView(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(pageHtml))
 }
 
-func HandleThreadPost(w http.ResponseWriter, r *http.Request) {
+func PostThreadHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
 		return
@@ -80,7 +80,7 @@ func HandleThreadPost(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", http.StatusMovedPermanently)
 }
 
-func HandleThreadDelete(w http.ResponseWriter, r *http.Request) {
+func DeleteThreadHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
 		return
