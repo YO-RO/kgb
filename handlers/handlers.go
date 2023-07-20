@@ -13,6 +13,11 @@ import (
 )
 
 func HandleThreadView(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
+		return
+	}
+
 	formHtml := "<form action='/post' method='post'>" +
 		"<label>ニックネーム<br><input type='text' name='name'/></label><br>" +
 		"<textarea name='body' placeholder='今日の出来事を書いてみましょう' rows='4' cols='40'></textarea><br>" +
@@ -58,6 +63,11 @@ func HandleThreadView(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandleThreadPost(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
+		return
+	}
+
 	r.ParseForm()
 
 	newThread := models.NewThread(
@@ -71,6 +81,11 @@ func HandleThreadPost(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandleThreadDelete(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
+		return
+	}
+
 	r.ParseForm()
 
 	id, err := strconv.Atoi(r.PostFormValue("id"))
